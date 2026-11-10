@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hands Together – Give and see what it does</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F5F8F6; --surface:#FFFFFF; --ink:#12211F; --muted:#5A6A67; --line:#D5E0DC;
+  --forest:#0E4A44; --forest-ink:#F5F8F6; --gold:#F0B33A; --gold-ink:#2A1E00; --danger:#B3261E;
+  --r-lg:22px; --r-md:12px; --r-sm:6px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0C1716; --surface:#13221F; --ink:#E8F1EE; --muted:#9CB0AB; --line:#27403B;
+    --forest:#7FD1C4; --forest-ink:#07201C; --gold:#F0B33A; --gold-ink:#2A1E00; --danger:#FF8A80;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0C1716; --surface:#13221F; --ink:#E8F1EE; --muted:#9CB0AB; --line:#27403B;
+  --forest:#7FD1C4; --forest-ink:#07201C; --gold:#F0B33A; --gold-ink:#2A1E00; --danger:#FF8A80;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1.0625rem/1.6 "Instrument Sans",system-ui,sans-serif}
+h1,h2,h3{font-family:"Bricolage Grotesque",system-ui,sans-serif;line-height:1.08;margin:0;letter-spacing:-.02em}
+h1{font-size:clamp(2.4rem,6vw,4.4rem);font-weight:800}
+h2{font-size:clamp(1.7rem,3.6vw,2.5rem);font-weight:700}
+h3{font-size:1.25rem;font-weight:700}
+p{margin:0}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px;border-radius:var(--r-sm)}
+.wrap{max-width:1120px;margin:0 auto;padding:0 1.25rem}
+section{padding:4.5rem 0}
+.muted{color:var(--muted)}
+
+/* header */
+header{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:1rem;height:64px}
+.logo{font:800 1.25rem "Bricolage Grotesque",sans-serif;text-decoration:none;display:flex;align-items:center;gap:.5rem}
+.logo i{width:22px;height:22px;border-radius:50% 50% 50% 4px;background:var(--gold);display:inline-block;transform:rotate(-45deg)}
+nav{display:flex;gap:1.25rem;align-items:center}
+nav a{text-decoration:none;font-weight:500}
+nav a:hover{text-decoration:underline}
+.icon-btn{background:none;border:1px solid var(--line);color:var(--ink);border-radius:999px;width:38px;height:38px;cursor:pointer;font-size:1rem}
+@media(max-width:640px){nav a.hide-sm{display:none}}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;border:0;cursor:pointer;font:600 1.0625rem "Instrument Sans",sans-serif;padding:.9rem 1.4rem;border-radius:var(--r-md);background:var(--forest);color:var(--forest-ink);text-decoration:none;transition:transform .15s}
+.btn:hover{transform:translateY(-1px)}
+.btn[disabled]{opacity:.6;cursor:progress}
+.btn.gold{background:var(--gold);color:var(--gold-ink)}
+.btn.ghost{background:none;border:1.5px solid var(--line);color:var(--ink)}
+
+/* hero */
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:3rem;align-items:center;padding:4rem 0}
+.hero p.lead{font-size:1.25rem;max-width:34ch;margin-top:1.25rem;color:var(--muted)}
+.hero .trust{display:flex;gap:1.75rem;flex-wrap:wrap;margin-top:2rem}
+.hero .trust div b{display:block;font:700 1.6rem "Bricolage Grotesque",sans-serif}
+@media(max-width:860px){.hero{grid-template-columns:1fr;gap:2rem}}
+
+/* donate card */
+.card{background:var(--surface);border:1.5px solid var(--line);border-radius:var(--r-lg);padding:1.5rem}
+.seg{display:grid;grid-auto-flow:column;gap:.25rem;background:var(--bg);border:1px solid var(--line);border-radius:var(--r-md);padding:.25rem}
+.seg button{border:0;background:none;color:var(--muted);font:600 .95rem "Instrument Sans",sans-serif;padding:.55rem;border-radius:9px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--forest);color:var(--forest-ink)}
+.chips{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin:1rem 0 .75rem}
+.chip{border:1.5px solid var(--line);background:none;color:var(--ink);border-radius:var(--r-md);padding:.7rem .25rem;font:600 1rem "Instrument Sans",sans-serif;cursor:pointer}
+.chip[aria-pressed="true"]{border-color:var(--forest);background:color-mix(in srgb,var(--forest) 12%,transparent)}
+label{display:block;font-weight:600;font-size:.95rem;margin-bottom:.3rem}
+input[type=text],input[type=email],input[type=number],select{width:100%;padding:.75rem .9rem;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:var(--r-md);font:inherit}
+.field{margin-top:.9rem}
+.check{display:flex;gap:.6rem;align-items:flex-start;margin-top:.8rem;font-size:.95rem}
+.check input{margin-top:.3rem;width:18px;height:18px;accent-color:var(--forest)}
+.impact{margin:1rem 0 .25rem;padding:1rem;border-radius:var(--r-md);background:var(--forest);color:var(--forest-ink)}
+.impact b{font:800 1.9rem/1 "Bricolage Grotesque",sans-serif;display:block;margin-bottom:.25rem}
+.err{color:var(--danger);font-size:.9rem;margin-top:.4rem;min-height:1.2em}
+
+/* campaigns */
+.head{display:flex;justify-content:space-between;align-items:end;gap:1rem;flex-wrap:wrap;margin-bottom:2rem}
+.tabs{display:flex;gap:.5rem;flex-wrap:wrap}
+.tabs button{border:1.5px solid var(--line);background:none;color:var(--ink);border-radius:999px;padding:.45rem 1rem;font:600 .95rem "Instrument Sans",sans-serif;cursor:pointer}
+.tabs button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1.25rem}
+.camp{display:flex;flex-direction:column;gap:.75rem}
+.camp .art{height:110px;border-radius:var(--r-md);display:grid;place-items:center;font-size:2.6rem}
+.bar{height:10px;border-radius:99px;background:var(--line);overflow:hidden}
+.bar span{display:block;height:100%;background:var(--gold);border-radius:99px;width:0;transition:width 1s cubic-bezier(.2,.7,.2,1)}
+.camp .meta{display:flex;justify-content:space-between;font-size:.9rem}
+.camp .btn{margin-top:auto;padding:.65rem}
+
+/* split of funds */
+.split{display:flex;height:46px;border-radius:var(--r-md);overflow:hidden;margin:1.5rem 0 1rem}
+.split div{display:grid;place-items:center;font-weight:600;font-size:.9rem;color:#fff;white-space:nowrap}
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+.legend p b{display:block}
+
+/* donors */
+.donors{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:.75rem;list-style:none;padding:0;margin:1.5rem 0 0}
+.donors li{padding:.8rem 1rem;border:1px solid var(--line);border-radius:var(--r-md);background:var(--surface);font-size:.95rem}
+.donors small{color:var(--muted);display:block}
+
+details{border-bottom:1px solid var(--line);padding:1rem 0}
+summary{font-weight:600;cursor:pointer}
+details p{margin-top:.5rem;color:var(--muted);max-width:65ch}
+footer{border-top:1px solid var(--line);padding:2rem 0;color:var(--muted);font-size:.95rem}
+
+/* modal */
+dialog{border:0;border-radius:var(--r-lg);padding:2rem;max-width:440px;background:var(--surface);color:var(--ink)}
+dialog::backdrop{background:rgba(0,0,0,.55)}
+.hero h1{animation:rise .7s both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="#top"><i aria-hidden="true"></i>Hands Together</a>
+    <nav aria-label="Main">
+      <a class="hide-sm" href="#causes">Causes</a>
+      <a class="hide-sm" href="#transparency">Where money goes</a>
+      <a class="hide-sm" href="#faq">FAQ</a>
+      <button class="icon-btn" id="theme" aria-label="Toggle dark mode">◐</button>
+      <a class="btn gold" href="#give" style="padding:.5rem 1rem">Donate</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+<div class="wrap hero">
+  <div>
+    <h1>Give today. See what it does tomorrow.</h1>
+    <p class="lead">Food, school fees, clean water and medical care for families who cannot afford them. Choose an amount and see exactly what it provides.</p>
+    <div class="trust" aria-label="Our impact so far">
+      <div><b id="s-people">0</b><span class="muted">people helped</span></div>
+      <div><b id="s-raised">0</b><span class="muted">raised so far</span></div>
+      <div><b>92%</b><span class="muted">goes to programs</span></div>
+    </div>
+  </div>
+
+  <form class="card" id="give" novalidate aria-labelledby="give-title">
+    <h2 id="give-title" style="font-size:1.5rem;margin-bottom:1rem">Make a donation</h2>
+    <div class="seg" role="group" aria-label="Frequency">
+      <button type="button" data-freq="once" aria-pressed="true">Give once</button>
+      <button type="button" data-freq="monthly" aria-pressed="false">Give monthly</button>
+    </div>
+    <div class="chips" id="chips" role="group" aria-label="Amount"></div>
+    <div class="field" style="margin-top:0">
+      <label for="custom">Or enter your own amount (<span class="cur">₦</span>)</label>
+      <input id="custom" type="number" inputmode="numeric" min="1" placeholder="Other amount">
+    </div>
+    <div class="field">
+      <label for="cause">Where should it go?</label>
+      <select id="cause"></select>
+    </div>
+    <div class="impact" aria-live="polite"><b id="impact-n"></b><span id="impact-t"></span></div>
+    <div class="field"><label for="name">Full name</label><input id="name" type="text" autocomplete="name"></div>
+    <div class="field"><label for="email">Email for your receipt</label><input id="email" type="email" autocomplete="email"></div>
+    <label class="check"><input type="checkbox" id="anon"><span>Show my gift as anonymous on the donor wall</span></label>
+    <label class="check"><input type="checkbox" id="fee"><span>Add <span id="fee-amt"></span> so 100% of my gift reaches the cause</span></label>
+    <p class="err" id="err" role="alert"></p>
+    <button class="btn gold" id="pay" style="width:100%;margin-top:.5rem">Donate <span id="pay-amt"></span></button>
+    <p class="muted" style="font-size:.85rem;margin-top:.75rem">Payments are processed securely by our payment partner. We never see or store your card details.</p>
+  </form>
+</div>
+
+<section id="causes" style="padding-top:2rem">
+  <div class="wrap">
+    <div class="head">
+      <h2>Choose a cause</h2>
+      <div class="tabs" id="tabs" role="group" aria-label="Filter causes"></div>
+    </div>
+    <div class="grid" id="camps"></div>
+  </div>
+</section>
+
+<section id="transparency" style="background:var(--surface);border-block:1px solid var(--line)">
+  <div class="wrap">
+    <h2>Where every naira goes</h2>
+    <p class="muted" style="margin-top:.75rem;max-width:60ch">Published each quarter, with receipts. Replace these figures with your audited numbers.</p>
+    <div class="split" role="img" aria-label="92 percent programs, 5 percent operations, 3 percent fundraising">
+      <div style="width:92%;background:#0E4A44">92% programs</div>
+      <div style="width:5%;background:#6B5B95"></div>
+      <div style="width:3%;background:#B3571E"></div>
+    </div>
+    <div class="legend">
+      <p><b>92% Programs</b><span class="muted">Food, school, water and health work on the ground.</span></p>
+      <p><b>5% Operations</b><span class="muted">Staff, audits and transport.</span></p>
+      <p><b>3% Fundraising</b><span class="muted">Reaching more donors.</span></p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Recent donors</h2>
+    <ul class="donors" id="donors"></ul>
+  </div>
+</section>
+
+<section id="faq" style="padding-top:0">
+  <div class="wrap" style="max-width:780px">
+    <h2 style="margin-bottom:1rem">Questions</h2>
+    <details><summary>Is my donation secure?</summary><p>Yes. Payments go through a PCI-compliant payment provider. Your card details never touch our servers.</p></details>
+    <details><summary>Will I get a receipt?</summary><p>You receive an email receipt immediately after your payment is confirmed.</p></details>
+    <details><summary>Can I cancel a monthly gift?</summary><p>Yes, at any time. Use the link in any receipt email or reply to it and we will cancel it.</p></details>
+    <details><summary>Can I give to a specific cause?</summary><p>Yes. Pick a cause in the form and your gift is reserved for it.</p></details>
+  </div>
+</section>
+</main>
+
+<footer><div class="wrap">© <span id="yr"></span> Hands Together. Registered non-profit. Registration number: add yours here.</div></footer>
+
+<dialog id="thanks">
+  <h2 style="font-size:1.6rem">Thank you, <span id="t-name"></span>.</h2>
+  <p style="margin:.75rem 0 1.25rem" id="t-msg"></p>
+  <form method="dialog"><button class="btn" style="width:100%">Close</button></form>
+</dialog>
+
+<script>
+"use strict";
+/* ---------- CONFIG: edit these ---------- */
+const CONFIG = {
+  API: "/api",                 // backend base URL (see server.js)
+  USD_RATE: 1500,              // NGN per 1 USD. Update or fetch from your backend.
+  FEE_PCT: 0.015,              // optional "cover the fees" percentage
+  NGN_CHIPS: [2000, 5000, 10000, 25000, 50000, 100000],
+  USD_CHIPS: [5, 10, 25, 50, 100, 250],
+};
+/* Amounts are stored in NGN internally; USD is a display option. */
+const CAUSES = [
+  {id:"food",  tag:"Food",      icon:"🍲", color:"#F6D9A8", title:"Family food packs",     unit:25000, noun:"family food pack",       does:"feeds a family of five for two weeks", goal:5000000, raised:3180000, people:640},
+  {id:"school",tag:"Education", icon:"📚", color:"#CDE5F5", title:"School kits and fees",  unit:15000, noun:"child's school term",    does:"covers books, uniform and fees for one child for a term", goal:4000000, raised:2240000, people:410},
+  {id:"water", tag:"Water",     icon:"💧", color:"#C7EAE3", title:"Clean water access",    unit:50000, noun:"household water connection", does:"gives one household clean water for years", goal:8000000, raised:5900000, people:980},
+  {id:"health",tag:"Health",    icon:"🩺", color:"#F5CFCB", title:"Free medical outreach", unit:10000, noun:"patient visit",          does:"pays for one consultation and medicine", goal:3000000, raised:1150000, people:300},
+];
+const DONORS = [
+  ["Amaka O.", 10000, "Clean water access"], ["Anonymous", 50000, "Family food packs"],
+  ["Tunde A.", 5000, "School kits and fees"], ["Grace E.", 25000, "Free medical outreach"],
+  ["Anonymous", 2000, "Family food packs"], ["Ibrahim S.", 100000, "Clean water access"],
+];
+
+/* ---------- state ---------- */
+const $ = s => document.querySelector(s);
+const state = {cur:"NGN", freq:"once", amount:10000, cause:"water", filter:"All"};
+const fmt = (ngn, cur=state.cur) => cur==="USD"
+  ? "$"+(ngn/CONFIG.USD_RATE).toLocaleString("en-US",{maximumFractionDigits:2})
+  : "₦"+Math.round(ngn).toLocaleString("en-NG");
+const compact = n => n>=1e6 ? (n/1e6).toFixed(1).replace(/\.0$/,"")+"M" : n>=1e3 ? Math.round(n/1e3)+"K" : String(n);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+/* ---------- render ---------- */
+function renderChips(){
+  const list = state.cur==="USD" ? CONFIG.USD_CHIPS.map(v=>v*CONFIG.USD_RATE) : CONFIG.NGN_CHIPS;
+  $("#chips").innerHTML = list.map(v =>
+    `<button type="button" class="chip" data-v="${v}" aria-pressed="${v===state.amount}">${fmt(v)}</button>`).join("");
+}
+function total(){ return state.amount + ($("#fee").checked ? Math.round(state.amount*CONFIG.FEE_PCT) : 0); }
+function renderImpact(){
+  const c = CAUSES.find(x=>x.id===state.cause), n = state.amount / c.unit;
+  if(!state.amount){ $("#impact-n").textContent="Enter an amount"; $("#impact-t").textContent=""; }
+  else if(n>=1){ const k=Math.floor(n); $("#impact-n").textContent = `${k} ${c.noun}${k>1?"s":""}`;
+    $("#impact-t").textContent = `Each one ${c.does}.`; }
+  else { $("#impact-n").textContent = `${Math.round(n*100)}% of a ${c.noun}`;
+    $("#impact-t").textContent = `A full one ${c.does} (${fmt(c.unit)}).`; }
+  $("#fee-amt").textContent = fmt(Math.round(state.amount*CONFIG.FEE_PCT));
+  $("#pay-amt").textContent = state.amount ? fmt(total()) + (state.freq==="monthly" ? " monthly" : "") : "";
+}
+function renderCamps(){
+  const tags = ["All", ...new Set(CAUSES.map(c=>c.tag))];
+  $("#tabs").innerHTML = tags.map(t=>`<button type="button" data-t="${t}" aria-pressed="${t===state.filter}">${t}</button>`).join("");
+  $("#camps").innerHTML = CAUSES.filter(c=>state.filter==="All"||c.tag===state.filter).map(c=>{
+    const p = Math.min(100, Math.round(c.raised/c.goal*100));
+    return `<article class="card camp">
+      <div class="art" style="background:${c.color}" aria-hidden="true">${c.icon}</div>
+      <h3>${esc(c.title)}</h3>
+      <div class="bar" role="progressbar" aria-valuenow="${p}" aria-valuemin="0" aria-valuemax="100" aria-label="${esc(c.title)} funded"><span data-w="${p}"></span></div>
+      <div class="meta"><span><b>${fmt(c.raised)}</b> raised</span><span class="muted">${p}% of ${fmt(c.goal)}</span></div>
+      <p class="muted" style="font-size:.95rem">${fmt(c.unit)} ${c.does}.</p>
+      <button type="button" class="btn ghost" data-give="${c.id}">Give to this cause</button>
+    </article>`;}).join("");
+  requestAnimationFrame(()=>document.querySelectorAll(".bar span").forEach(s=>s.style.width=s.dataset.w+"%"));
+}
+function renderDonors(){
+  $("#donors").innerHTML = DONORS.map(([n,a,c])=>`<li><b>${esc(n)}</b> gave ${fmt(a)}<small>${esc(c)}</small></li>`).join("");
+}
+function countUp(el, to, f){
+  if(matchMedia("(prefers-reduced-motion:reduce)").matches){ el.textContent=f(to); return; }
+  const t0=performance.now();
+  (function step(t){ const k=Math.min(1,(t-t0)/1200); el.textContent=f(Math.round(to*(1-Math.pow(1-k,3)))); if(k<1) requestAnimationFrame(step); })(t0);
+}
+function renderAll(){
+  document.querySelectorAll(".cur").forEach(e=>e.textContent = state.cur==="USD"?"$":"₦");
+  renderChips(); renderImpact(); renderCamps(); renderDonors();
+}
+
+/* ---------- init ---------- */
+$("#cause").innerHTML = CAUSES.map(c=>`<option value="${c.id}">${esc(c.title)}</option>`).join("");
+$("#cause").value = state.cause;
+$("#yr").textContent = new Date().getFullYear();
+countUp($("#s-people"), CAUSES.reduce((a,c)=>a+c.people,0), n=>n.toLocaleString());
+countUp($("#s-raised"), CAUSES.reduce((a,c)=>a+c.raised,0), n=>"₦"+compact(n));
+const cur = document.createElement("div"); cur.className="seg"; cur.setAttribute("role","group"); cur.setAttribute("aria-label","Currency");
+cur.style.margin="0 0 .75rem";
+cur.innerHTML = `<button type="button" data-cur="NGN" aria-pressed="true">₦ Naira</button><button type="button" data-cur="USD" aria-pressed="false">$ US Dollar</button>`;
+$(".seg").after(cur);
+renderAll();
+
+/* ---------- events ---------- */
+document.addEventListener("click", e=>{
+  const b = e.target.closest("button"); if(!b) return;
+  if(b.dataset.freq){ state.freq=b.dataset.freq; document.querySelectorAll("[data-freq]").forEach(x=>x.setAttribute("aria-pressed",x===b)); renderImpact(); }
+  if(b.dataset.cur){ state.cur=b.dataset.cur; document.querySelectorAll("[data-cur]").forEach(x=>x.setAttribute("aria-pressed",x===b)); $("#custom").value=""; renderAll(); }
+  if(b.classList.contains("chip")){ state.amount=+b.dataset.v; $("#custom").value=""; renderChips(); renderImpact(); }
+  if(b.dataset.t){ state.filter=b.dataset.t; renderCamps(); }
+  if(b.dataset.give){ state.cause=b.dataset.give; $("#cause").value=state.cause; renderImpact(); $("#give").scrollIntoView({behavior:"smooth",block:"center"}); $("#custom").focus({preventScroll:true}); }
+});
+$("#custom").addEventListener("input", e=>{
+  const v = parseFloat(e.target.value)||0;
+  state.amount = state.cur==="USD" ? Math.round(v*CONFIG.USD_RATE) : Math.round(v);
+  renderChips(); renderImpact();
+});
+$("#cause").addEventListener("change", e=>{ state.cause=e.target.value; renderImpact(); });
+$("#fee").addEventListener("change", renderImpact);
+$("#theme").addEventListener("click", ()=>{
+  const dark = document.documentElement.dataset.theme==="dark" || (!document.documentElement.dataset.theme && matchMedia("(prefers-color-scheme:dark)").matches);
+  document.documentElement.dataset.theme = dark ? "light" : "dark";
+});
+
+$("#give").addEventListener("submit", async e=>{
+  e.preventDefault();
+  const name=$("#name").value.trim(), email=$("#email").value.trim(), err=$("#err");
+  err.textContent="";
+  if(state.amount < (state.cur==="USD" ? CONFIG.USD_RATE : 500)) return err.textContent="Enter an amount of at least "+(state.cur==="USD"?"$1":"₦500")+".";
+  if(!name) return err.textContent="Enter your name so we can address your receipt.";
+  if(!/^\S+@\S+\.\S+$/.test(email)) return err.textContent="Enter a valid email address, for example name@example.com.";
+  const btn=$("#pay"); btn.disabled=true; btn.firstChild.textContent="Connecting to secure checkout… ";
+  const payload = {name, email, amountNGN: total(), cause: state.cause, monthly: state.freq==="monthly", anonymous: $("#anon").checked};
+  try{
+    const r = await fetch(CONFIG.API+"/donate",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+    if(!r.ok) throw new Error("Server error "+r.status);
+    const {url} = await r.json();
+    location.href = url;                     // redirect to hosted payment page
+  }catch(ex){
+    /* DEMO MODE: no backend reachable, so show the thank-you flow only. No money moves. */
+    $("#t-name").textContent = name.split(" ")[0];
+    $("#t-msg").textContent = "This is a demo, so no payment was taken. Connect server.js to accept real donations.";
+    $("#thanks").showModal();
+  }finally{ btn.disabled=false; btn.firstChild.textContent="Donate "; }
+});
+</script>
+</body>
+</html>
